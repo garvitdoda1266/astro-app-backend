@@ -2,10 +2,10 @@
   "name": "astro-app-backend",
   "version": "1.0.0",
   "description": "Astrology app backend",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "Garvit",
   "license": "ISC",

@@ -1,11 +1,12 @@
 const express = require('express');
 const { addMoney, withdrawMoney, verifyPayment } = require('../controllers/walletController');
-const { protect } = require('../middleware/auth');
+const { protect, userOnly } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/add-money', addMoney);
+// remove protect and userOnly for local testing
+router.post('/add-money', protect, userOnly, addMoney);
 router.post('/withdraw',protect, withdrawMoney);
-router.post('/verify-payment', verifyPayment);
+router.post('/verify-payment',protect, userOnly, verifyPayment);
 
 module.exports = router;

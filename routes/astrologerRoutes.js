@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { protect } = require("../middleware/auth");
+const { protect, userOnly } = require("../middleware/auth");
 const { 
   getProfile, 
   updateProfile,
@@ -17,7 +17,7 @@ router.post("/create", protect, createProfile);
 // get astrologers with filters
 router.get("/", protect, getAstrologers);
 
-router.post("/", protect, addReview);
+router.post("/", protect, userOnly, addReview);
 router.get("/:astrologerId", getAstrologerReviews);
 
 
