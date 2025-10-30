@@ -58,7 +58,6 @@ exports.addReview = async (req, res, next) => {
     const { astrologerId, rating, reviewText } = req.body;
     const userId = req.user._id;
 
-    //hey 
     const review = await astrologerService.addReview(userId, astrologerId, rating, reviewText);
     res.status(201).json({ message: "Review added successfully", review });
   } catch (err) {
