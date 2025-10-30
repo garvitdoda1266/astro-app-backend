@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Admin = require("../models/Admin");
 const Astrologer = require("../models/Astrologer");
 const ApiError = require("../utils/ApiError");
 
@@ -9,8 +10,7 @@ const protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded.id);
-    req.user = await User.findById(decoded.id) || await Astrologer.findById(decoded.id);
+    req.user = await User.findById(decoded.id) || await Astrologer.findById(decoded.id) || await Admin.findById(decoded.id);
     if (!req.user) return next(new ApiError(401, "User not found"));
 
     // Edge cases

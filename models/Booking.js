@@ -20,7 +20,7 @@ const bookingSchema = new mongoose.Schema(
     // Consultation details
     duration: { type: Number, required: true , default:0}, // in minutes (e.g., 30)
     amountDeducted: { type: Number,  required: true , default:0}, // total charged amount
-
+    rating: { type: Number, default: 0 },
     // Mode of consultation
     type: {
       type: String,

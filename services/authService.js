@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const Admin = require("../models/Admin");
 const Astrologer = require("../models/Astrologer");
 const ApiError = require("../utils/ApiError");
 const twilio = require("twilio");
@@ -21,21 +22,16 @@ const generateToken = (id, role) => {
 };
 
 // 🔹 Register user or astrologer
-exports.register = async ({ name, email, phone, password, role }) => {
+exports.register = async ({ username, password}) => {
   try {
-    const existing =
-      (await User.findOne({ email })) || (await Astrologer.findOne({ email }));
-    if (existing) throw new ApiError(400, "Email already exists");
-
-    let user;
-    if (role === "user") {
-      user = new User({ name, email, phone, password });
-    } else if (role === "astrologer") {
-      user = new Astrologer({ name, email, phone, password });
-    } else {
-      throw new ApiError(400, "Invalid role");
+    const role="admin";
+    if(!username || !password){
+      throw new ApiError(400, "Username or Password is missing");
     }
+    const existing = await Admin.findOne({ username });
+    if (existing) throw new ApiError(400, "Username already exists for an admin");
 
+    let user=new Admin({ username, password });
     await user.save();
 
     const token = generateToken(user._id, role);
@@ -48,18 +44,19 @@ exports.register = async ({ name, email, phone, password, role }) => {
 };
 
 // 🔹 Login logic
-exports.login = async ({ email, password }) => {
+exports.login = async ({ username, password }) => {
   try {
-    const user =
-      (await User.findOne({ email })) || (await Astrologer.findOne({ email }));
+    if(!username || !password){
+      throw new ApiError(400, "Username or Password is missing");
+    }
+    const user =await Admin.findOne({ username });
 
     if (!user) throw new ApiError(400, "Invalid credentials");
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new ApiError(400, "Invalid credentials");
 
-    const role = user instanceof User ? "user" : "astrologer";
-    const token = generateToken(user._id, role);
+    const token = generateToken(user._id, "admin");
 
     return { token, user };
   } catch (err) {

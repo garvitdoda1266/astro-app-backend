@@ -2,6 +2,7 @@ const adminService = require("../services/adminService");
 
 exports.getUsers = async (req, res, next) => {
   try {
+    // add filters
     const users = await adminService.getAllUsers();
     res.json(users);
   } catch (err) {
