@@ -30,8 +30,7 @@ const uploadToS3 = async (file, folder = 'uploads') => {
       Bucket: process.env.S3_BUCKET_NAME || 'astro-app-backend-uploads',
       Key: key,
       Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: 'public-read', 
+      ContentType: file.mimetype
     });
     
     await s3Client.send(command);
