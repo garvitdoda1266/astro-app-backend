@@ -27,7 +27,7 @@ const uploadToS3 = async (file, folder = 'uploads') => {
     const key = `${folder}/${uniqueSuffix}${path.extname(file.originalname)}`;
     
     const command = new PutObjectCommand({
-      Bucket: process.env.S3_BUCKET_NAME || 'astro-app',
+      Bucket: process.env.S3_BUCKET_NAME || 'astro-app-backend-uploads',
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
@@ -36,7 +36,7 @@ const uploadToS3 = async (file, folder = 'uploads') => {
     await s3Client.send(command);
     
     // Construct the URL based on whether using MinIO or real S3
-    const bucket = process.env.S3_BUCKET_NAME || 'astro-app';
+    const bucket = process.env.S3_BUCKET_NAME || 'astro-app-backend-uploads';
     
     const region = process.env.AWS_REGION || 'us-east-1';
     return `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
