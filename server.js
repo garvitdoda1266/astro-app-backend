@@ -26,7 +26,7 @@ app.use("/", require("./routes/imageUpload"));
 app.use('/wallet', require("./routes/walletRoutes"));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health-astro', (req, res) => {
   res.status(200).json({ message: 'Server is running' });
 });
 
