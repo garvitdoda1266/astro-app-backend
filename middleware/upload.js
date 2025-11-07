@@ -31,6 +31,7 @@ const uploadToS3 = async (file, folder = 'uploads') => {
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
+      ACL: 'public-read', 
     });
     
     await s3Client.send(command);
