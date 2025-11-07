@@ -14,7 +14,7 @@
       const amount = document.getElementById('amount').value;
 
       // Step 1: Create order on backend
-      const orderRes = await fetch('http://localhost:5001/wallet/add-money', {
+      const orderRes = await fetch('http://localhost:5002/wallet/add-money', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: '6900cf879d255872d11e138f', amount: parseInt(amount) })
@@ -31,7 +31,7 @@
         description: "Add Money",
         handler: async function(response) {
           // Step 3: Verify payment and update wallet
-          const verifyRes = await fetch('http://localhost:5001/wallet/verify-payment', {
+          const verifyRes = await fetch('http://localhost:5002/wallet/verify-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

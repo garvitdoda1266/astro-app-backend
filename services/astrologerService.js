@@ -12,7 +12,6 @@ exports.createAstrologerProfile = async (data) => {
     "experience",
     "skills",
     "category",
-    "subCategory",
     "languagesKnown",
     "workingDays",
     "consultationFee",

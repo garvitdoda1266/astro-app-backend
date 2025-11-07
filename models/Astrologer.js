@@ -22,34 +22,42 @@ const bankDetailsSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// Category + Subcategory structure
+const categorySchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true }, // e.g. "Astrology", "Healing"
+    subCategories: [{ type: String }],      // e.g. ["Love", "Career", "Legal"]
+  },
+  { _id: false }
+);
+
 // Astrologer schema
 const astrologerSchema = new mongoose.Schema(
   {
     // Basic info
-    profileName: { type: String}, // display name for UI
+    profileName: { type: String },
     phone: { type: String, required: true, unique: true },
 
     // Profile details
-    displayImage: [{ type: String }], // profile picture URL
+    displayImage: [{ type: String }],
     aboutMe: { type: String },
     experience: { type: Number, default: 0 },
-    skills: [{ type: String }], // broader skills list
-    category: [{ type: String }], // astrologer,healer etc
-    subCategory: [{ type: String }], // love, legal etc
+    skills: [{ type: String }],
+    category: [categorySchema], // <-- updated structure
     languagesKnown: [{ type: String }],
     averageRating: { type: Number, default: 0 },
     totalReviews: { type: Number, default: 0 },
-    verified: { type: Boolean, default: false },  // approved by admin or not
+    verified: { type: Boolean, default: false },
     role: { type: String, default: "astrologer" },
 
     // KYC & Proofs
-    idProofFrontImage: { type: String }, // file URL
+    idProofFrontImage: { type: String },
     idProofBackImage: { type: String },
     addressProofFrontImage: { type: String },
     addressProofBackImage: { type: String },
 
     // Consultation & working details
-    workingDays: [{ type: Number}],
+    workingDays: [{ type: Number }],
     consultationFee: consultationFeeSchema,
     earnings: { type: Number, default: 0 },
 

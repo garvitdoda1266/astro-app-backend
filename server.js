@@ -25,6 +25,11 @@ app.use("/api/booking", require("./routes/bookingRoutes"));
 app.use("/", require("./routes/imageUpload"));
 app.use('/wallet', require("./routes/walletRoutes"));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ message: 'Server is running' });
+});
+
 // Error handler
 app.use(errorHandler);
 
