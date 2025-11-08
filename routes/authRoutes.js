@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, sendOtp, verifyOtp } = require("../controllers/authController");
+const { register, login, sendOtp, verifyOtp, logout } = require("../controllers/authController");
 const validate = require("../middleware/validate");
 const Joi = require("joi");
 
@@ -20,5 +20,6 @@ router.post("/register", validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp)
+router.post("/logout", logout)
 
 module.exports = router;

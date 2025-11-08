@@ -142,26 +142,30 @@ exports.getAstrologerBookings = async (astrologerId, startDate, endDate) => {
   const today = new Date();
   const todayStart = new Date(today.setHours(0, 0, 0, 0));
 
-  // Build base filters
   const baseFilter = { astrologerId };
 
-  // 🟩 UPCOMING: bookings today or later
+  // Convert dates safely
+  const start = startDate ? new Date(startDate) : todayStart;
+  const end = endDate ? new Date(endDate) : undefined;
+
+  // 🟩 UPCOMING: pending or confirmed bookings between start & end
   const upcomingFilter = {
     ...baseFilter,
     status: { $in: ["pending", "confirmed"] },
     date: {
-      $gte: startDate ? new Date(startDate) : todayStart,
-      ...(endDate ? { $lte: new Date(endDate) } : {})
-    }
+      ...(start ? { $gte: start } : {}),
+      ...(end ? { $lte: end } : {}),
+    },
   };
 
-  // 🟥 PAST: bookings before today
+  // 🟥 PAST: completed bookings between start & end
   const pastFilter = {
     ...baseFilter,
+    status: "completed",
     date: {
-      $lt: startDate ? new Date(startDate) : todayStart,
-      ...(endDate ? { $lte: new Date(endDate) } : {})
-    }
+      ...(start ? { $gte: start } : {}),
+      ...(end ? { $lte: end } : {}),
+    },
   };
 
   const upcoming = await Booking.find(upcomingFilter)
@@ -174,6 +178,7 @@ exports.getAstrologerBookings = async (astrologerId, startDate, endDate) => {
 
   return { upcoming, past };
 };
+
 
 
 
