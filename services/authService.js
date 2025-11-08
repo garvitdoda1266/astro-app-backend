@@ -95,55 +95,59 @@ exports.sendOtpService = async (mobileNumber) => {
 
 // 🔹 Verify OTP
 exports.verifyOtpService = async (phone, otp, role) => {
-try {
-    const formattedNumber = phone.startsWith('+') ? phone : `+91${phone}`;
-    // const verificationCheck = await twilioClient.verify.v2
-    //   .services(TWILIO_VERIFY_SERVICE_SID)
-    //   .verificationChecks
-    //   .create({
-    //     to: formattedNumber,
-    //     code: otp
-    //   });
+  try {
+    // Normalize phone (remove +91 or any prefix)
+    const normalizedPhone = phone.replace(/^\+91/, "");
 
-    // add a verification check
-    if (otp==='123456') {
-       let user = (await User.findOne({ phone })) || (await Astrologer.findOne({ phone }));
-       let isNewUser=false;
-       if(!user){
+    // Use normalized phone for DB search and storage
+    if (otp === "123456") {
+      let user =
+        (await User.findOne({ phone: normalizedPhone })) ||
+        (await Astrologer.findOne({ phone: normalizedPhone }));
+
+      let isNewUser = false;
+
+      // Create new user if not exists
+      if (!user) {
         if (role === "user") {
-          user = new User({ phone, role });
+          user = new User({ phone: normalizedPhone, role });
         } else if (role === "astrologer") {
-          user = new Astrologer({ phone });
+          user = new Astrologer({ phone: normalizedPhone });
         } else {
           throw new ApiError(400, "Invalid role");
         }
         await user.save();
         isNewUser = true;
-       }
-       if(user instanceof User && !user.name){
-        isNewUser=true;
-       }
-       if(user instanceof Astrologer && !user.profileName){
-        isNewUser=true;
-       }
-       const token = generateToken(user._id, role);
-      return { 
-        isValid: true, 
-        token:token,
+      }
+
+      // Check if profile is incomplete → treat as new user
+      if (user instanceof User && !user.name) {
+        isNewUser = true;
+      }
+      if (user instanceof Astrologer && !user.profileName) {
+        isNewUser = true;
+      }
+
+      const token = generateToken(user._id, role);
+
+      return {
+        isValid: true,
+        token,
         is_new_user: isNewUser,
-        message: "OTP verified successfully"
+        message: "OTP verified successfully",
       };
     } else {
-      return { 
-        isValid: false, 
-        message: "Invalid OTP" 
+      return {
+        isValid: false,
+        message: "Invalid OTP",
       };
     }
   } catch (error) {
     console.error("Verify OTP error:", error.message);
     return {
       isValid: false,
-      message: "Invalid or expired OTP"
+      message: "Invalid or expired OTP",
     };
   }
 };
+
