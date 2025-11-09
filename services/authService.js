@@ -97,22 +97,22 @@ exports.sendOtpService = async (mobileNumber) => {
 exports.verifyOtpService = async (phone, otp, role) => {
   try {
     // Normalize phone (remove +91 or any prefix)
-    const normalizedPhone = phone.replace(/^\+91/, "");
+    // const normalizedPhone = phone.replace(/^\+91/, "");
 
     // Use normalized phone for DB search and storage
     if (otp === "123456") {
       let user =
-        (await User.findOne({ phone: normalizedPhone })) ||
-        (await Astrologer.findOne({ phone: normalizedPhone }));
+        (await User.findOne({ phone: phone })) ||
+        (await Astrologer.findOne({ phone: phone }));
 
       let isNewUser = false;
 
       // Create new user if not exists
       if (!user) {
         if (role === "user") {
-          user = new User({ phone: normalizedPhone, role });
+          user = new User({ phone: phone, role });
         } else if (role === "astrologer") {
-          user = new Astrologer({ phone: normalizedPhone });
+          user = new Astrologer({ phone: phone });
         } else {
           throw new ApiError(400, "Invalid role");
         }
