@@ -73,7 +73,7 @@ exports.updateProfile = async (astrologerId, updateData) => {
   const astrologer = await Astrologer.findById(astrologerId);
   if (!astrologer) throw new ApiError(404, "Astrologer not found");
 
-  const allowedFields = ["profileName","displayImage","aboutMe","experience","skills","category","subCategory","languagesKnown","walletBalance","averageRating","workingDays","consultationFee", "totalReviews"];
+  const allowedFields = ["profileName","displayImage","aboutMe","experience","skills","category","languagesKnown","walletBalance","averageRating","workingDays","consultationFee", "totalReviews","bankDetails"];
   allowedFields.forEach(field => {
     if (updateData[field] !== undefined) astrologer[field] = updateData[field];
   });
